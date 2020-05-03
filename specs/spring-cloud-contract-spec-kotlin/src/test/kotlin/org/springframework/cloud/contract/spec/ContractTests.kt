@@ -49,7 +49,7 @@ class ContractTests {
 				headers {
 					header("foo", "bar")
 				}
-				body = body("foo" to "bar")
+				body("foo" to "bar")
 			}
 			response {
 				status = OK
@@ -554,7 +554,7 @@ then:
 			request {
 				method = GET
 				url("/path")
-				body = body("id" to mapOf("value" to "132"))
+				body("id" to mapOf("value" to "132"))
 				bodyMatchers {
 					jsonPath( "$.id.value", byRegex(anInteger))
 				}
@@ -670,7 +670,7 @@ then:
 			request {
 				method = PUT
 				url("/path")
-				body = body(listOf("foo", "bar"))
+				body(listOf("foo", "bar"))
 			}
 			response {
 				status = OK
@@ -732,7 +732,7 @@ then:
 			request {
 				method = GET
 				url("/path")
-				body = body("id" to mapOf("value" to "132"))
+				body("id" to mapOf("value" to "132"))
 				headers {
 					accept = APPLICATION_JSON
 				}

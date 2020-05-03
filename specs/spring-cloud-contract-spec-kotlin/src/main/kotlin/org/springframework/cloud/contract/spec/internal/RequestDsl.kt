@@ -51,27 +51,27 @@ open class RequestDsl : CommonDsl() {
     /**
      * The HTTP headers which should be sent with the request.
      */
-    var headers: Headers? = null
+    private var headers: Headers? = null
 
     /**
      * The HTTP cookies which should be sent with the request.
      */
-    var cookies: Cookies? = null
+    private var cookies: Cookies? = null
 
     /**
      * The HTTP request body which should be sent.
      */
-    var body: Body? = null
+    private var body: Body? = null
 
     /**
      * The content that needs to be sent with a multipart HTTP request.
      */
-    var multipart: Multipart? = null
+    private var multipart: Multipart? = null
 
     /**
      * The HTTP request body matchers.
      */
-    var bodyMatchers: BodyMatchers? = null
+    private var bodyMatchers: BodyMatchers? = null
 
     fun url(url: String) {
 		this.url = Url(url)
@@ -103,15 +103,25 @@ open class RequestDsl : CommonDsl() {
         this.cookies = RequestCookiesDsl().apply(cookies).get()
     }
 
-    fun body(body: Map<String, Any>) = Body(body.toDslProperties())
+    fun body(body: Map<String, Any>) {
+		this.body = Body(body.toDslProperties())
+	}
 
-    fun body(vararg body: Pair<String, Any>) = Body(body.toMap().toDslProperties())
+    fun body(vararg body: Pair<String, Any>) {
+		this.body = Body(body.toMap().toDslProperties())
+	}
 
-    fun body(body: Pair<String, Any>) = Body(mapOf(body).toDslProperties())
+    fun body(body: Pair<String, Any>) {
+		this.body = Body(mapOf(body).toDslProperties())
+	}
 
-    fun body(body: List<Any>) = Body(body.toDslProperties())
+    fun body(body: List<Any>) {
+		this.body = Body(body.toDslProperties())
+	}
 
-    fun body(body: Any) = Body(body)
+    fun body(body: Any) {
+		this.body = Body(body)
+	}
 
     fun multipart(configurer: MultipartDsl.() -> Unit) {
         this.multipart = MultipartDsl().apply(configurer).get()
