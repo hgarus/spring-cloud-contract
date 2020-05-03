@@ -44,7 +44,7 @@ class ContractTests {
 	fun `should work for http`() {
 		val contract = contract {
 			request {
-				url = url("/foo")
+				url("/foo")
 				method = PUT
 				headers {
 					header("foo", "bar")
@@ -93,7 +93,7 @@ class ContractTests {
 	fun `should fail when no method is present`() {
 		val contract = contract {
 			request {
-				url = url("/foo")
+				url("/foo")
 			}
 			response {
 				status = OK
@@ -129,7 +129,7 @@ class ContractTests {
 	fun `should fail when no status is present`() {
 		val contract = contract {
 			request {
-				url = url("/foo")
+				url("/foo")
 				method = GET
 			}
 			response {
@@ -311,13 +311,13 @@ then:
 		val a: Contract = contract {
 			request {
 				method = GET
-				url = url("/1")
+				url("/1")
 			}
 		}
 		val b: Contract = contract {
 			request {
 				method = GET
-				url = url("/1")
+				url("/1")
 			}
 		}
 
@@ -334,13 +334,13 @@ then:
 		val a: Contract = contract {
 			request {
 				method = GET
-				url = url(c("/1"), p("/1"))
+				url(c("/1"), p("/1"))
 			}
 		}
 		val b: Contract = contract {
 			request {
 				method = GET
-				url = url(c("/1"), p("/1"))
+				url(c("/1"), p("/1"))
 			}
 		}
 
@@ -361,7 +361,7 @@ then:
 				headers {
 					contentType = APPLICATION_JSON
 				}
-				url = url("/$index")
+				url("/$index")
 			}
 			response {
 				status = OK
@@ -373,7 +373,7 @@ then:
 				headers {
 					contentType = APPLICATION_JSON
 				}
-				url = url("/$index")
+				url("/$index")
 			}
 			response {
 				status = OK
@@ -397,7 +397,7 @@ then:
 				headers {
 					contentType = APPLICATION_JSON
 				}
-				url = url("/$index")
+				url("/$index")
 			}
 			response {
 				status = OK
@@ -410,7 +410,7 @@ then:
 				headers {
 					contentType = APPLICATION_JSON
 				}
-				url = url("/$index")
+				url("/$index")
 			}
 			response {
 				status = OK
@@ -430,7 +430,7 @@ then:
 		val a: Contract = contract {
 			request {
 				method = GET
-				url = url("/path")
+				url("/path")
 				headers {
 					header(name = "Accept",
 						value = value(
@@ -467,7 +467,7 @@ then:
 		val b: Contract = contract {
 			request {
 				method = GET
-				url = url("/path")
+				url("/path")
 				headers {
 					header(name = "Accept",
 						value = value(
@@ -553,7 +553,7 @@ then:
 		val contract = contract {
 			request {
 				method = GET
-				url = url("/path")
+				url("/path")
 				body = body("id" to mapOf("value" to "132"))
 				bodyMatchers {
 					jsonPath( "$.id.value", byRegex(anInteger))
@@ -603,7 +603,7 @@ then:
 		val contract = contract {
 			request {
 				method = GET
-				url = url("/path") withQueryParameters {
+				urlPath("/path") {
 					parameter("foo", "bar")
 				}
 			}
@@ -616,12 +616,12 @@ then:
 			Contract.assertContract(contract)
 		}.also {
 			val request = contract.request
-			assertThat(request.url.clientValue).isEqualTo("/path")
-			val queryParameters = request.url.queryParameters.parameters
+			assertThat(request.urlPath.clientValue).isEqualTo("/path")
+			val queryParameters = request.urlPath.queryParameters.parameters
 			assertThat(queryParameters[0].name).isEqualTo("foo")
 			assertThat(queryParameters[0].clientValue).isEqualTo("bar")
 			assertThat(queryParameters[0].serverValue).isEqualTo("bar")
-			assertThat(request.url.serverValue).isEqualTo("/path")
+			assertThat(request.urlPath.serverValue).isEqualTo("/path")
 			assertThat(request.method.clientValue).isEqualTo("GET")
 			assertThat(request.method.serverValue).isEqualTo("GET")
 		}.also {
@@ -636,7 +636,7 @@ then:
 		val contract = contract {
 			request {
 				method = GET
-				urlPath = path("/path") withQueryParameters {
+				urlPath("/path") {
 					parameter("foo", "bar")
 				}
 			}
@@ -669,7 +669,7 @@ then:
 		val contract = contract {
 			request {
 				method = PUT
-				url = url("/path")
+				url("/path")
 				body = body(listOf("foo", "bar"))
 			}
 			response {
@@ -696,7 +696,7 @@ then:
 		val contract = contract {
 			request {
 				method = GET
-				url = url("/cookie")
+				url("/cookie")
 				cookies {
 					cookie("name", "foo")
 					cookie("name2", "bar")
@@ -731,7 +731,7 @@ then:
 		val contract = contract {
 			request {
 				method = GET
-				url = url("/path")
+				url("/path")
 				body = body("id" to mapOf("value" to "132"))
 				headers {
 					accept = APPLICATION_JSON

@@ -27,13 +27,6 @@ import java.util.stream.Collectors
  * @author Tim Ysewyn
  * @since 2.2.0
  */
-infix fun Url.withQueryParameters(parameters: QueryParameters.() -> Unit) = apply {
-    queryParameters = QueryParameters().apply(parameters)
-}
-
-infix fun UrlPath.withQueryParameters(parameters: QueryParameters.() -> Unit) = apply {
-    queryParameters = QueryParameters().apply(parameters)
-}
 
 fun <T : Any> T.toDslProperty(): DslProperty<T> = DslProperty(this)
 

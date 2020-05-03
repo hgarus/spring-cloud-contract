@@ -73,15 +73,27 @@ open class RequestDsl : CommonDsl() {
      */
     var bodyMatchers: BodyMatchers? = null
 
-    fun url(url: String) = Url(url)
+    fun url(url: String) {
+		this.url = Url(url)
+	}
 
-    fun url(url: DslProperty<Any>) = Url(url)
+    fun url(url: DslProperty<Any>) {
+		this.url = Url(url)
+	}
 
-    fun url(client: ClientDslProperty, server: ServerDslProperty) = Url(value(client, server))
+    fun url(client: ClientDslProperty, server: ServerDslProperty) {
+		this.url = Url(value(client, server))
+	}
 
-    fun path(path: String) = UrlPath(path)
+    fun urlPath(path: String) {
+		urlPath = UrlPath(path)
+	}
 
-    fun path(path: DslProperty<Any>) = UrlPath(path)
+	fun urlPath(path: String, parameters: QueryParameters.() -> Unit) {
+		val urlPath = UrlPath(path)
+		urlPath.queryParameters = QueryParameters().apply(parameters)
+		this.urlPath = urlPath
+	}
 
     fun headers(headers: HeadersDsl.() -> Unit) {
         this.headers = RequestHeadersDsl().apply(headers).get()

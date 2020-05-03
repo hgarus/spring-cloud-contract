@@ -22,7 +22,7 @@ import org.springframework.cloud.contract.spec.HttpMethod.POST
 contract {
     request {
         method = POST
-        url = url("/tests")
+        url("/tests")
         multipart {
             field("file1", named(
                     value(consumer(regex(nonEmpty)), producer("filename1")),
