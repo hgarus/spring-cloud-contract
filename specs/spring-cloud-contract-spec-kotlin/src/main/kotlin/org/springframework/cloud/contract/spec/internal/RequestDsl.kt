@@ -16,6 +16,7 @@
 
 package org.springframework.cloud.contract.spec.internal
 
+import org.springframework.cloud.contract.spec.HttpMethod
 import org.springframework.cloud.contract.spec.toDslProperties
 import org.springframework.cloud.contract.spec.toDslProperty
 import org.springframework.cloud.contract.spec.util.RegexpUtils
@@ -35,17 +36,17 @@ open class RequestDsl : CommonDsl() {
     /**
      * The HTTP method.
      */
-    var method: DslProperty<*>? = null
+    var method: HttpMethod? = null
 
     /**
      * The URL to which the request will be sent.
      */
-    var url: Url? = null
+    private var url: Url? = null
 
     /**
      * The URL to which the request will be sent.
      */
-    var urlPath: UrlPath? = null
+    private var urlPath: UrlPath? = null
 
     /**
      * The HTTP headers which should be sent with the request.
@@ -71,8 +72,6 @@ open class RequestDsl : CommonDsl() {
      * The HTTP request body matchers.
      */
     var bodyMatchers: BodyMatchers? = null
-
-    fun method(method: String) = method.toDslProperty()
 
     fun url(url: String) = Url(url)
 
@@ -114,29 +113,7 @@ open class RequestDsl : CommonDsl() {
 
     /* HTTP METHODS */
 
-    val GET: DslProperty<String>
-        get() = method(HttpMethods.GET)
 
-    val HEAD: DslProperty<String>
-        get() = method(HttpMethods.HEAD)
-
-    val POST: DslProperty<String>
-        get() = method(HttpMethods.POST)
-
-    val PUT: DslProperty<String>
-        get() = method(HttpMethods.PUT)
-
-    val PATCH: DslProperty<String>
-        get() = method(HttpMethods.PATCH)
-
-    val DELETE: DslProperty<String>
-        get() = method(HttpMethods.DELETE)
-
-    val OPTIONS: DslProperty<String>
-        get() = method(HttpMethods.OPTIONS)
-
-    val TRACE: DslProperty<String>
-        get() = method(HttpMethods.TRACE)
 
     /* REGEX */
 
@@ -282,7 +259,7 @@ open class RequestDsl : CommonDsl() {
 
     internal fun get(): Request {
         val request = Request()
-        method?.also { request.method = method }
+        request.method = method?.httpMethod?.name?.toDslProperty()
         url?.also { request.url = url }
         urlPath?.also { request.urlPath = urlPath }
         headers?.also { request.headers = headers }

@@ -17,6 +17,7 @@
 package contracts
 
 import org.springframework.cloud.contract.spec.ContractDsl.Companion.contract
+import org.springframework.cloud.contract.spec.HttpMethod.POST
 
 contract {
     request {

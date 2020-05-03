@@ -31,6 +31,7 @@ import org.springframework.cloud.contract.spec.internal.KotlinContractConverter
 import org.springframework.cloud.contract.spec.internal.MatchingType
 import org.springframework.cloud.contract.spec.internal.NamedProperty
 import org.springframework.cloud.contract.spec.internal.RegexProperty
+import org.springframework.cloud.contract.spec.HttpMethod.*
 
 /**
  * Tests written based on the Java contract tests written in Groovy
