@@ -16,7 +16,10 @@
 
 package org.springframework.cloud.contract.spec
 
+import org.jetbrains.kotlin.js.backend.ast.JsThisRef
 import org.springframework.cloud.contract.spec.internal.*
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.KProperty
 
 /**
  * @author Tim Ysewyn
@@ -25,8 +28,10 @@ import org.springframework.cloud.contract.spec.internal.*
 @ContractDslMarker
 class ContractDsl {
 
+	private val contract : Contract = Contract()
+
     companion object {
-        fun contract(dsl: ContractDsl.() -> Unit): Contract = ContractDsl().apply(dsl).get()
+        fun contract(dsl: ContractDsl.() -> Unit): Contract = ContractDsl().apply(dsl).contract
     }
 
     /**
@@ -35,17 +40,18 @@ class ContractDsl {
      * take precedence. A priority of 1 is highest and takes precedence over a priority of
      * 2.
      */
-    var priority: Int? = null
+
+    var priority by PropertyDelegate<Int?>(contract::getPriority, contract::setPriority)
 
     /**
      * The label by which you'll reference the contract on the message consumer side.
      */
-    var label: String? = null
+    var label by PropertyDelegate<String?>(contract::getLabel, contract::setLabel)
 
     /**
      * Description of a contract. May be used in the documentation generation.
      */
-    var description: String? = null
+    var description by PropertyDelegate<String?>(contract::getDescription, contract::setDescription)
 
     /**
      * Name of the generated test / stub. If not provided then the file name will be used.
@@ -56,45 +62,25 @@ class ContractDsl {
      * Remember to have a unique name for every single contract. Otherwise you might
      * generate tests that have two identical methods or you will override the stubs.
      */
-    var name: String? = null
+    var name by PropertyDelegate<String?>(contract::getName, contract::setName)
 
     /**
      * Whether the contract should be ignored or not.
      */
-    var ignored: Boolean = false
+    var ignored by PropertyDelegate(contract::getIgnored, contract::setIgnored, false)
 
     /**
      * Whether the contract is in progress. It's not ignored, but the feature is not yet
      * finished. Used together with the {@code generateStubs} option.
      */
-    var inProgress: Boolean = false
-
-    /**
-     * The HTTP request part of the contract.
-     */
-    var request: Request? = null
-
-    /**
-     * The HTTP response part of the contract.
-     */
-    var response: Response? = null
-
-    /**
-     * The input side of a messaging contract.
-     */
-    var input: Input? = null
-
-    /**
-     * The output side of a messaging contract.
-     */
-    var outputMessage: OutputMessage? = null
+    var inProgress by PropertyDelegate(contract::getInProgress, contract::setInProgress, false)
 
     /**
      * The HTTP request part of the contract.
      * @param configurer lambda to configure the HTTP request
      */
     fun request(configurer: RequestDsl.() -> Unit) {
-        request = RequestDsl().apply(configurer).get()
+		contract.request = RequestDsl().apply(configurer).get()
     }
 
     /**
@@ -102,7 +88,7 @@ class ContractDsl {
      * @param configurer lambda to configure the HTTP response
      */
     fun response(configurer: ResponseDsl.() -> Unit) {
-        response = ResponseDsl().apply(configurer).get()
+        contract.response = ResponseDsl().apply(configurer).get()
     }
 
     /**
@@ -110,7 +96,7 @@ class ContractDsl {
      * @param configurer lambda to configure the input message
      */
     fun input(configurer: InputDsl.() -> Unit) {
-        input = InputDsl().apply(configurer).get()
+        contract.input = InputDsl().apply(configurer).get()
     }
 
     /**
@@ -118,22 +104,17 @@ class ContractDsl {
      * @param configurer lambda to configure the output message
      */
     fun outputMessage(configurer: OutputMessageDsl.() -> Unit) {
-        outputMessage = OutputMessageDsl().apply(configurer).get()
+        contract.outputMessage = OutputMessageDsl().apply(configurer).get()
     }
 
-    private fun get(): Contract {
-        val contract = Contract()
-        priority?.also { contract.priority = priority }
-        label?.also { contract.label = label }
-        description?.also { contract.description = description }
-        name?.also { contract.name = name }
-        contract.ignored = ignored
-        contract.inProgress = inProgress
-        request?.also { contract.request = request }
-        response?.also { contract.response = response }
-        input?.also { contract.input = input }
-        outputMessage?.also { contract.outputMessage = outputMessage }
-        return contract
-    }
+	private class PropertyDelegate<T>(val getter: () -> T, val setter: (T) -> Unit, defaultValue: T? = null) {
+		init {
+		    if (defaultValue != null) {
+				setter.invoke(defaultValue)
+			}
+		}
+		operator fun <R> getValue(thisRef: R, property: KProperty<*>) : T = getter.invoke()
+		operator fun <R> setValue(thisRef: R, property: KProperty<*>, value: T) = setter.invoke(value)
+	}
 
 }
