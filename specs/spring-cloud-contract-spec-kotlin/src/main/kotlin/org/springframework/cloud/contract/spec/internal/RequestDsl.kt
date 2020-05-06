@@ -18,7 +18,6 @@ package org.springframework.cloud.contract.spec.internal
 
 import org.springframework.cloud.contract.spec.HttpMethod
 import org.springframework.cloud.contract.spec.toDslProperties
-import org.springframework.cloud.contract.spec.toDslProperty
 import org.springframework.cloud.contract.spec.util.RegexpUtils
 
 /**
@@ -30,126 +29,132 @@ import org.springframework.cloud.contract.spec.util.RegexpUtils
 @ContractDslMarker
 class RequestDsl  {
 
-    /**
-     * The HTTP method.
+	private val request = Request()
+
+	/**
+     * HTTP method of the request
      */
     var method: HttpMethod? = null
 
-    /**
-     * The URL to which the request will be sent.
-     */
-    private var url: Url? = null
-
-    /**
-     * The URL to which the request will be sent.
-     */
-    private var urlPath: UrlPath? = null
-
-    /**
-     * The HTTP headers which should be sent with the request.
-     */
-    private var headers: Headers? = null
-
-    /**
-     * The HTTP cookies which should be sent with the request.
-     */
-    private var cookies: Cookies? = null
-
-    /**
-     * The HTTP request body which should be sent.
-     */
-    private var body: Body? = null
-
-    /**
-     * The content that needs to be sent with a multipart HTTP request.
-     */
-    private var multipart: Multipart? = null
-
-    /**
-     * The HTTP request body matchers.
-     */
-    private var bodyMatchers: BodyMatchers? = null
-
+	/**
+	 * URL where the request will be sent.
+	 */
     fun url(url: String) {
-		this.url = Url(url)
+		request.url = Url(url)
 	}
 
+	/**
+	 * URL where the request will be sent.
+	 */
     fun url(url: DslProperty<Any>) {
-		this.url = Url(url)
+		request.url = Url(url)
 	}
 
+	/**
+	 * URL where the request will be sent.
+	 */
     fun url(client: ClientDslProperty, server: ServerDslProperty) {
-		this.url = Url(value.client(client).server(server))
+		request.url = Url(value.client(client).server(server))
 	}
 
     fun urlPath(path: String) {
-		urlPath = UrlPath(path)
+		request.urlPath = UrlPath(path)
 	}
 
+	/**
+	 * URL where the request will be sent.
+	 */
 	fun urlPath(path: String, parameters: QueryParameters.() -> Unit) {
 		val urlPath = UrlPath(path)
 		urlPath.queryParameters = QueryParameters().apply(parameters)
-		this.urlPath = urlPath
+		request.urlPath = urlPath
 	}
 
+	/**
+	 * HTTP headers sent with the request.
+	 */
     fun headers(headers: HeadersDsl.() -> Unit) {
-        this.headers = RequestHeadersDsl().apply(headers).get()
+        request.headers = RequestHeadersDsl().apply(headers).get()
     }
 
+	/**
+	 * HTTP cookies sent with the request.
+	 */
     fun cookies(cookies: CookiesDsl.() -> Unit) {
-        this.cookies = RequestCookiesDsl().apply(cookies).get()
+        request.cookies = RequestCookiesDsl().apply(cookies).get()
     }
 
+	/**
+	 * Body of the HTTP request
+	 */
     fun body(body: Map<String, Any>) {
-		this.body = Body(body.toDslProperties())
+		request.body = Body(body.toDslProperties())
 	}
 
+	/**
+	 * Body of the HTTP request
+	 */
     fun body(vararg body: Pair<String, Any>) {
-		this.body = Body(body.toMap().toDslProperties())
+		request.body = Body(body.toMap().toDslProperties())
 	}
 
+	/**
+	 * Body of the HTTP request
+	 */
     fun body(body: Pair<String, Any>) {
-		this.body = Body(mapOf(body).toDslProperties())
+		request.body = Body(mapOf(body).toDslProperties())
 	}
 
+	/**
+	 * Body of the HTTP request
+	 */
     fun body(body: List<Any>) {
-		this.body = Body(body.toDslProperties())
+		request.body = Body(body.toDslProperties())
 	}
 
+	/**
+	 * Body of the HTTP request
+	 */
     fun body(body: Any) {
-		this.body = Body(body)
+		request.body = Body(body)
 	}
 
+	/**
+	 * Content of a multipart HTTP request
+	 */
     fun multipart(configurer: MultipartDsl.() -> Unit) {
-        this.multipart = MultipartDsl().apply(configurer).get()
+        request.multipart = MultipartDsl().apply(configurer).get()
     }
 
+	/**
+	 * BodyMatchers for the HTTP request
+	 */
     fun bodyMatchers(configurer: BodyMatchersDsl.() -> Unit) {
-        this.bodyMatchers = BodyMatchersDsl().apply(configurer).get()
+        request.bodyMatchers = BodyMatchersDsl().apply(configurer).get()
     }
 
+	/**
+	 * Constants and functions to describe values using regular expressions
+	 */
 	val r = RegexSpec()
+	/**
+	 * Constants and functions to describe values using regular expressions
+	 */
 	val regex = RegexSpec()
 
 	class RequestValueSpec : ValueSpec<ClientDslProperty>(Request())
+	/**
+	 * Constants and functions to describe values
+	 */
 	val v
 		get() = RequestValueSpec()
+	/**
+	 * Constants and functions to describe values
+	 */
 	val value
 		get() = RequestValueSpec()
 
-
-    internal fun get(): Request {
-        val request = Request()
-        request.method = method?.httpMethod?.name?.toDslProperty()
-        url?.also { request.url = url }
-        urlPath?.also { request.urlPath = urlPath }
-        headers?.also { request.headers = headers }
-        cookies?.also { request.cookies = cookies }
-        body?.also { request.body = body }
-        multipart?.also { request.multipart = multipart }
-        bodyMatchers?.also { request.bodyMatchers = bodyMatchers }
-        return request
-    }
+    internal fun get() = request
 
     private inner class RequestHeadersDsl : HeadersDsl() {
 
