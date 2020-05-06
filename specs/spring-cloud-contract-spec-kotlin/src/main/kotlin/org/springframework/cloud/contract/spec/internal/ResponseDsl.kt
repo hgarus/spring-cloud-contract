@@ -390,8 +390,8 @@ class ResponseDsl : CommonDsl() {
             return value?.also {
                 return when (value) {
                     is String -> return this.common.value(
-                            c(value),
-                            p(NotToEscapePattern(Pattern.compile(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*")))
+                            this.common.c(value),
+                            this.common.p(NotToEscapePattern(Pattern.compile(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*")))
                     )
                     else -> value
                 }
@@ -408,8 +408,8 @@ class ResponseDsl : CommonDsl() {
             return value?.also {
                 return when (value) {
                     is String -> return this.common.value(
-                            c(value),
-                            p(regex(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*"))
+                            this.common.c(value),
+                            this.common.p(this.common.regex(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*"))
                     )
                     else -> value
                 }

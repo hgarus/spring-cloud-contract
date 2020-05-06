@@ -22,7 +22,7 @@ package org.springframework.cloud.contract.spec.internal
  * @author Tim Ysewyn
  * @since 2.2.0
  */
-open class CookiesDsl : CommonDsl() {
+open class CookiesDsl {
 
     private val cookies = LinkedHashMap<String, Any>()
 

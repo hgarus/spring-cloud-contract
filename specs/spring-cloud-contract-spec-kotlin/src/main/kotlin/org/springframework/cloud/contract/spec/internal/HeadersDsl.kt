@@ -22,7 +22,7 @@ package org.springframework.cloud.contract.spec.internal
  * @author Tim Ysewyn
  * @since 2.2.0
  */
-open class HeadersDsl : CommonDsl() {
+open class HeadersDsl {
 
     internal val headers = LinkedHashMap<String, Any>()
 

@@ -20,7 +20,6 @@ import org.springframework.cloud.contract.spec.HttpMethod
 import org.springframework.cloud.contract.spec.toDslProperties
 import org.springframework.cloud.contract.spec.toDslProperty
 import org.springframework.cloud.contract.spec.util.RegexpUtils
-import java.util.regex.Pattern
 
 /**
  * Represents the request side of the HTTP communication.
@@ -29,9 +28,7 @@ import java.util.regex.Pattern
  * @since 2.2.0
  */
 @ContractDslMarker
-open class RequestDsl : CommonDsl() {
-
-    private val delegate = Request()
+class RequestDsl  {
 
     /**
      * The HTTP method.
@@ -82,7 +79,7 @@ open class RequestDsl : CommonDsl() {
 	}
 
     fun url(client: ClientDslProperty, server: ServerDslProperty) {
-		this.url = Url(value(client, server))
+		this.url = Url(value.client(client).server(server))
 	}
 
     fun urlPath(path: String) {
@@ -131,73 +128,14 @@ open class RequestDsl : CommonDsl() {
         this.bodyMatchers = BodyMatchersDsl().apply(configurer).get()
     }
 
-    /* HELPER VARIABLES */
+	val r = RegexSpec()
+	val regex = RegexSpec()
 
-    /* HTTP METHODS */
-
-
-
-    /* REGEX */
-
-    val anyAlphaUnicode: ClientDslProperty
-        get() = delegate.anyAlphaUnicode()
-
-    val anyAlphaNumeric: ClientDslProperty
-        get() = delegate.anyAlphaNumeric()
-
-    val anyNumber: ClientDslProperty
-        get() = delegate.anyNumber()
-
-    val anyInteger: ClientDslProperty
-        get() = delegate.anyInteger()
-
-    val anyPositiveInt: ClientDslProperty
-        get() = delegate.anyPositiveInt()
-
-    val anyDouble: ClientDslProperty
-        get() = delegate.anyDouble()
-
-    val anyHex: ClientDslProperty
-        get() = delegate.anyHex()
-
-    val aBoolean: ClientDslProperty
-        get() = delegate.aBoolean()
-
-    val anyIpAddress: ClientDslProperty
-        get() = delegate.anyIpAddress()
-
-    val anyHostname: ClientDslProperty
-        get() = delegate.anyHostname()
-
-    val anyEmail: ClientDslProperty
-        get() = delegate.anyEmail()
-
-    val anyUrl: ClientDslProperty
-        get() = delegate.anyUrl()
-
-    val anyHttpsUrl: ClientDslProperty
-        get() = delegate.anyHttpsUrl()
-
-    val anyUuid: ClientDslProperty
-        get() = delegate.anyUuid()
-
-    val anyDate: ClientDslProperty
-        get() = delegate.anyDate()
-
-    val anyDateTime: ClientDslProperty
-        get() = delegate.anyDateTime()
-
-    val anyTime: ClientDslProperty
-        get() = delegate.anyTime()
-
-    val anyIso8601WithOffset: ClientDslProperty
-        get() = delegate.anyIso8601WithOffset()
-
-    val anyNonBlankString: ClientDslProperty
-        get() = delegate.anyNonBlankString()
-
-    val anyNonEmptyString: ClientDslProperty
-        get() = delegate.anyNonEmptyString()
+	class RequestValueSpec : ValueSpec<ClientDslProperty>(Request())
+	val v
+		get() = RequestValueSpec()
+	val value
+		get() = RequestValueSpec()
 
     /* HELPER FUNCTIONS */
 
@@ -249,35 +187,6 @@ open class RequestDsl : CommonDsl() {
      */
     fun absent() = MatchingStrategy(true, MatchingStrategy.Type.ABSENT)
 
-    fun value(value: ClientDslProperty): DslProperty<Any> = delegate.value(value)
-
-    fun v(value: ClientDslProperty): DslProperty<Any> = delegate.value(value)
-
-    fun value(value: DslProperty<Any>): DslProperty<Any> = delegate.value(value)
-
-    fun v(value: DslProperty<Any>): DslProperty<Any> = delegate.value(value)
-
-    fun value(value: Pattern): DslProperty<Any> = delegate.value(value)
-
-    fun v(value: Pattern): DslProperty<Any> = delegate.value(value)
-
-    fun value(value: RegexProperty): DslProperty<Any> = delegate.value(value)
-
-    fun v(value: RegexProperty): DslProperty<Any> = delegate.value(value)
-
-    fun value(value: Any?): DslProperty<Any> = delegate.value(value)
-
-    fun v(value: Any?): DslProperty<Any> = delegate.value(value)
-
-    fun value(client: ClientDslProperty, server: ServerDslProperty): DslProperty<Any> = delegate.value(client, server)
-
-    fun v(client: ClientDslProperty, server: ServerDslProperty): DslProperty<Any> = delegate.value(client, server)
-
-    fun value(server: ServerDslProperty, client: ClientDslProperty): DslProperty<Any> = delegate.value(client, server)
-
-    fun v(server: ServerDslProperty, client: ClientDslProperty): DslProperty<Any> = delegate.value(client, server)
-
-    fun anyOf(vararg values: String?): ClientDslProperty = delegate.anyOf(*values)
 
     internal fun get(): Request {
         val request = Request()
@@ -292,17 +201,14 @@ open class RequestDsl : CommonDsl() {
         return request
     }
 
-    private class RequestHeadersDsl : HeadersDsl() {
-
-        private val common = Common()
+    private inner class RequestHeadersDsl : HeadersDsl() {
 
         override fun matching(value: Any?): Any? {
             return value?.also {
                 return when (value) {
-                    is String -> this.common.value(
-                            c(regex(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*")),
-                            p(value)
-                    )
+                    is String -> v
+							.consumer(regex(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*"))
+							.producer(value)
                     else -> value
                 }
             }
@@ -310,21 +216,18 @@ open class RequestDsl : CommonDsl() {
 
     }
 
-    private class RequestCookiesDsl : CookiesDsl() {
-
-        private val common = Common()
+    private inner class RequestCookiesDsl : CookiesDsl() {
 
         override fun matching(value: Any?): Any? {
             return value?.also {
                 return when (value) {
-                    is String -> this.common.value(
-                            c(regex(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*")),
-                            p(value)
-                    )
+                    is String -> v
+							.consumer(regex(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*"))
+							.producer(value)
                     else -> value
                 }
             }
         }
 
-    }
+	}
 }

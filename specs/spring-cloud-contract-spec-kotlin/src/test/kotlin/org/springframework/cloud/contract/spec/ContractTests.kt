@@ -16,22 +16,15 @@
 
 package org.springframework.cloud.contract.spec
 
-import java.io.File
-
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-
 import org.springframework.cloud.contract.spec.ContractDsl.Companion.contract
-import org.springframework.cloud.contract.spec.internal.Cookie
-import org.springframework.cloud.contract.spec.internal.DslProperty
-import org.springframework.cloud.contract.spec.internal.FromFileProperty
-import org.springframework.cloud.contract.spec.internal.KotlinContractConverter
-import org.springframework.cloud.contract.spec.internal.MatchingType
-import org.springframework.cloud.contract.spec.internal.NamedProperty
-import org.springframework.cloud.contract.spec.internal.RegexProperty
-import org.springframework.cloud.contract.spec.HttpMethod.*
+import org.springframework.cloud.contract.spec.HttpMethod.GET
+import org.springframework.cloud.contract.spec.HttpMethod.PUT
+import org.springframework.cloud.contract.spec.internal.*
+import java.io.File
 
 /**
  * Tests written based on the Java contract tests written in Groovy
@@ -334,13 +327,13 @@ then:
 		val a: Contract = contract {
 			request {
 				method = GET
-				url(c("/1"), p("/1"))
+				url(v.consumer("/1").producer("/1"))
 			}
 		}
 		val b: Contract = contract {
 			request {
 				method = GET
-				url(c("/1"), p("/1"))
+				url(v.consumer("/1").producer("/1"))
 			}
 		}
 
@@ -433,16 +426,13 @@ then:
 				url("/path")
 				headers {
 					header(name = "Accept",
-						value = value(
-							consumer(regex("text/.*")),
-							producer("text/plain")
-						)
+						value = v.consumer(regex("text/.*"))
+								.producer("text/plain")
 					)
 					header(name = "X-Custom-Header",
-						value = value(
-							consumer(regex("^.*2134.*$")),
-							producer("121345")
-						)
+						value = v
+								.consumer(regex("^.*2134.*$"))
+								.producer("121345")
 					)
 				}
 			}
@@ -470,16 +460,10 @@ then:
 				url("/path")
 				headers {
 					header(name = "Accept",
-						value = value(
-								consumer(regex("text/.*")),
-								producer("text/plain")
-						)
+						value = v.consumer(regex("text/.*")).producer("text/plain")
 					)
 					header(name = "X-Custom-Header",
-						value = value(
-								consumer(regex("^.*2134.*$")),
-								producer("121345")
-						)
+						value = v.consumer(regex("^.*2134.*$")).producer("121345")
 					)
 				}
 			}
@@ -556,7 +540,7 @@ then:
 				url("/path")
 				body("id" to mapOf("value" to "132"))
 				bodyMatchers {
-					jsonPath( "$.id.value", byRegex(anInteger))
+					jsonPath( "$.id.value", byRegex(r.anInteger))
 				}
 			}
 			response {
