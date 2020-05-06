@@ -36,4 +36,11 @@ class MultipartDsl {
         return Multipart(fields)
     }
 
+	fun named(name: DslProperty<Any>, value: DslProperty<Any>) = NamedProperty(name, value)
+
+	fun named(name: DslProperty<Any>, value: DslProperty<Any>,
+			  contentType: DslProperty<Any>) = NamedProperty(name, value, contentType)
+
+	fun named(namedMap: Map<String, DslProperty<Any>>) = NamedProperty(namedMap)
+
 }

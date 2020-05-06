@@ -180,8 +180,7 @@ open class CommonDsl {
     /**
      * Read file contents as String with the given Charset.
      * @param relativePath of the file to read
-     * @param charset to use for converting the bytes to String
-     * @return String file contents
+     * @return file contents
      */
     fun fileAsBytes(relativePath: String) = FromFileProperty(fileLocation(relativePath), ByteArray::class.java)
 
@@ -221,13 +220,6 @@ open class CommonDsl {
             throw IllegalStateException(ex)
         }
     }
-
-    fun named(name: DslProperty<Any>, value: DslProperty<Any>) = NamedProperty(name, value)
-
-    fun named(name: DslProperty<Any>, value: DslProperty<Any>,
-              contentType: DslProperty<Any>) = NamedProperty(name, value, contentType)
-
-    fun named(namedMap: Map<String, DslProperty<Any>>) = NamedProperty(namedMap)
 
     /* REGEX FUNCTIONS */
 
