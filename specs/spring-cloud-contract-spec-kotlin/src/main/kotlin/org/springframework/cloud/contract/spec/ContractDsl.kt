@@ -16,10 +16,7 @@
 
 package org.springframework.cloud.contract.spec
 
-import org.jetbrains.kotlin.js.backend.ast.JsThisRef
 import org.springframework.cloud.contract.spec.internal.*
-import kotlin.reflect.KMutableProperty
-import kotlin.reflect.KProperty
 
 /**
  * @author Tim Ysewyn
@@ -41,17 +38,23 @@ class ContractDsl {
      * 2.
      */
 
-    var priority by PropertyDelegate<Int?>(contract::getPriority, contract::setPriority)
+    var priority
+		get() = contract.priority
+		set(value) { contract.priority = value }
 
     /**
      * The label by which you'll reference the contract on the message consumer side.
      */
-    var label by PropertyDelegate<String?>(contract::getLabel, contract::setLabel)
+    var label
+		get() = contract.label
+		set(value) { contract.label = value }
 
     /**
      * Description of a contract. May be used in the documentation generation.
      */
-    var description by PropertyDelegate<String?>(contract::getDescription, contract::setDescription)
+    var description
+		get() = contract.description
+		set(value) { contract.description = value }
 
     /**
      * Name of the generated test / stub. If not provided then the file name will be used.
@@ -62,18 +65,24 @@ class ContractDsl {
      * Remember to have a unique name for every single contract. Otherwise you might
      * generate tests that have two identical methods or you will override the stubs.
      */
-    var name by PropertyDelegate<String?>(contract::getName, contract::setName)
+    var name
+		get() = contract.name
+		set(value) { contract.name = value }
 
     /**
      * Whether the contract should be ignored or not.
      */
-    var ignored by PropertyDelegate(contract::getIgnored, contract::setIgnored, false)
+    var ignored
+		get() = contract.ignored
+		set(value) { contract.ignored = value }
 
     /**
      * Whether the contract is in progress. It's not ignored, but the feature is not yet
      * finished. Used together with the {@code generateStubs} option.
      */
-    var inProgress by PropertyDelegate(contract::getInProgress, contract::setInProgress, false)
+    var inProgress
+		get() = contract.inProgress
+		set(value) { contract.inProgress = value }
 
     /**
      * The HTTP request part of the contract.
@@ -107,14 +116,5 @@ class ContractDsl {
         contract.outputMessage = OutputMessageDsl().apply(configurer).get()
     }
 
-	private class PropertyDelegate<T>(val getter: () -> T, val setter: (T) -> Unit, defaultValue: T? = null) {
-		init {
-		    if (defaultValue != null) {
-				setter.invoke(defaultValue)
-			}
-		}
-		operator fun <R> getValue(thisRef: R, property: KProperty<*>) : T = getter.invoke()
-		operator fun <R> setValue(thisRef: R, property: KProperty<*>, value: T) = setter.invoke(value)
-	}
-
 }
+
