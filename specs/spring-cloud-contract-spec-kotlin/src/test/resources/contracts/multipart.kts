@@ -18,6 +18,7 @@ package contracts
 
 import org.springframework.cloud.contract.spec.ContractDsl.Companion.contract
 import org.springframework.cloud.contract.spec.HttpMethod.POST
+import org.springframework.cloud.contract.spec.HttpStatus.OK
 
 contract {
     request {
@@ -40,7 +41,7 @@ contract {
         }
     }
     response {
-        status = OK
+        status(OK)
         headers {
             contentType = "application/json"
         }

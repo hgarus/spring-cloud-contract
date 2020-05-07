@@ -23,6 +23,7 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.cloud.contract.spec.ContractDsl.Companion.contract
 import org.springframework.cloud.contract.spec.HttpMethod.GET
 import org.springframework.cloud.contract.spec.HttpMethod.PUT
+import org.springframework.cloud.contract.spec.HttpStatus.OK
 import org.springframework.cloud.contract.spec.internal.*
 import java.io.File
 
@@ -45,7 +46,7 @@ class ContractTests {
 				body("foo" to "bar")
 			}
 			response {
-				status = OK
+				status(OK)
 				headers {
 					header("foo2", "bar")
 				}
@@ -89,7 +90,7 @@ class ContractTests {
 				url("/foo")
 			}
 			response {
-				status = OK
+				status(OK)
 			}
 		}
 
@@ -107,7 +108,7 @@ class ContractTests {
 				method = GET
 			}
 			response {
-				status = OK
+				status(OK)
 			}
 		}
 
@@ -357,7 +358,7 @@ then:
 				url("/$index")
 			}
 			response {
-				status = OK
+				status(OK)
 			}
 		}
 		val b: Contract = contract {
@@ -369,7 +370,7 @@ then:
 				url("/$index")
 			}
 			response {
-				status = OK
+				status(OK)
 			}
 		}
 
@@ -393,7 +394,7 @@ then:
 				url("/$index")
 			}
 			response {
-				status = OK
+				status(OK)
 			}
 		}
 		index = 2
@@ -406,7 +407,7 @@ then:
 				url("/$index")
 			}
 			response {
-				status = OK
+				status(OK)
 			}
 		}
 
@@ -437,7 +438,7 @@ then:
 				}
 			}
 			response {
-				status = OK
+				status(OK)
 				body = body("id" to mapOf("value" to "132"),
 						"surname" to "Kowalsky",
 						"name" to "Jan",
@@ -468,7 +469,7 @@ then:
 				}
 			}
 			response {
-				status = OK
+				status(OK)
 				body = body("id" to mapOf("value" to "132"),
 						"surname" to "Kowalsky",
 						"name" to "Jan",
@@ -544,7 +545,7 @@ then:
 				}
 			}
 			response {
-				status = OK
+				status(OK)
 				body = body("id" to mapOf("value" to "132"),
 						"surname" to "Kowalsky",
 						"name" to "Jan",
@@ -592,7 +593,7 @@ then:
 				}
 			}
 			response {
-				status = OK
+				status(OK)
 			}
 		}
 
@@ -625,7 +626,7 @@ then:
 				}
 			}
 			response {
-				status = OK
+				status(OK)
 			}
 		}
 
@@ -657,7 +658,7 @@ then:
 				body(listOf("foo", "bar"))
 			}
 			response {
-				status = OK
+				status(OK)
 				body = body(listOf("foo2", "bar2"))
 			}
 		}
@@ -687,7 +688,7 @@ then:
 				}
 			}
 			response {
-				status = OK
+				status(OK)
 				cookies {
 					cookie("name", "foo")
 					cookie("name2", "bar")
@@ -722,7 +723,7 @@ then:
 				}
 			}
 			response {
-				status = OK
+				status(OK)
 				body = body("value is ${fromRequest().body("$.value")}")
 				headers {
 					contentType = fromRequest().header(ACCEPT)
