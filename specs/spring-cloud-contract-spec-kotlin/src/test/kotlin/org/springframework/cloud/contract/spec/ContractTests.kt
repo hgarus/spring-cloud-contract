@@ -447,10 +447,7 @@ then:
 				headers {
 					header("Content-Type", "text/plain")
 					header("X-Custom-Header",
-							value(
-									stub("121345"),
-									test(regex("^.*2134.*$"))
-							)
+							value.stub("121345").test(regex("^.*2134.*$"))
 					)
 				}
 			}
@@ -478,10 +475,7 @@ then:
 				headers {
 					header("Content-Type", "text/plain")
 					header("X-Custom-Header",
-							value(
-								stub("121345"),
-								test(regex("^.*2134.*$"))
-							)
+							value.stub("121345").test(regex("^.*2134.*$"))
 					)
 				}
 			}

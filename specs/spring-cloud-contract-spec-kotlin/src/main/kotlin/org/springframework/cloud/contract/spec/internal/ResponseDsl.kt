@@ -30,7 +30,7 @@ import java.util.regex.Pattern
  * @since 2.2.0
  */
 @ContractDslMarker
-class ResponseDsl : CommonDsl() {
+class ResponseDsl {
 
     private val response = Response()
 
@@ -109,103 +109,27 @@ class ResponseDsl : CommonDsl() {
         response.bodyMatchers = ResponseBodyMatchersDsl().apply(configurer).get()
     }
 
-    /* HELPER VARIABLES */
+	/**
+	 * Constants and functions to describe values using regular expressions
+	 */
+	val regex = RegexSpec()
+	/**
+	 * Constants and functions to describe values using regular expressions
+	 */
+	val r = regex
 
-    /* REGEX */
 
-    val anyAlphaUnicode
-        get() = response.anyAlphaUnicode()
-
-    val anyAlphaNumeric
-        get() = response.anyAlphaNumeric()
-
-    val anyNumber
-        get() = response.anyNumber()
-
-    val anyInteger
-        get() = response.anyInteger()
-
-    val anyPositiveInt
-        get() = response.anyPositiveInt()
-
-    val anyDouble
-        get() = response.anyDouble()
-
-    val anyHex
-        get() = response.anyHex()
-
-    val aBoolean
-        get() = response.aBoolean()
-
-    val anyIpAddress
-        get() = response.anyIpAddress()
-
-    val anyHostname
-        get() = response.anyHostname()
-
-    val anyEmail
-        get() = response.anyEmail()
-
-    val anyUrl
-        get() = response.anyUrl()
-
-    val anyHttpsUrl
-        get() = response.anyHttpsUrl()
-
-    val anyUuid
-        get() = response.anyUuid()
-
-    val anyDate
-        get() = response.anyDate()
-
-    val anyDateTime
-        get() = response.anyDateTime()
-
-    val anyTime
-        get() = response.anyTime()
-
-    val anyIso8601WithOffset
-        get() = response.anyIso8601WithOffset()
-
-    val anyNonBlankString
-        get() = response.anyNonBlankString()
-
-    val anyNonEmptyString
-        get() = response.anyNonEmptyString()
-
-    /* HELPER FUNCTIONS */
-
-    fun value(value: ClientDslProperty) = response.value(value)
-
-    fun v(value: ClientDslProperty) = response.value(value)
-
-    fun value(value: DslProperty<Any>) = response.value(value)
-
-    fun v(value: DslProperty<Any>) = response.value(value)
-
-    fun value(value: Pattern) = response.value(value)
-
-    fun v(value: Pattern) = response.value(value)
-
-    fun value(value: RegexProperty) = response.value(value)
-
-    fun v(value: RegexProperty) = response.value(value)
-
-    fun value(value: Any?) = response.value(value)
-
-    fun v(value: Any?) = response.value(value)
-
-    fun value(client: ClientDslProperty, server: ServerDslProperty) = response.value(client, server)
-
-    fun v(client: ClientDslProperty, server: ServerDslProperty) = response.value(client, server)
-
-    fun value(server: ServerDslProperty, client: ClientDslProperty) = response.value(client, server)
-
-    fun v(server: ServerDslProperty, client: ClientDslProperty) = response.value(client, server)
+	class ResponseValueSpec : ValueSpec<ServerDslProperty>(Response())
+	/**
+	 * Constants and functions to describe values
+	 */
+	val value = ResponseValueSpec()
+	/**
+	 * Constants and functions to describe values
+	 */
+	val v = value
 
     fun fromRequest() = FromRequestDsl()
-
-    fun anyOf(vararg values: String?) = response.anyOf(*values)
 
     internal fun get(): Response = response
 
