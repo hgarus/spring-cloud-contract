@@ -51,8 +51,7 @@ class ResponseDsl {
     /**
      * HTTP response delay
      */
-	val delay
-		get() = DelaySpec()
+	val delay = DelaySpec()
 
 	inner class DelaySpec {
 		fun fixed(duration: Duration) {
@@ -81,23 +80,33 @@ class ResponseDsl {
     fun cookies(cookies: CookiesDsl.() -> Unit) {
         response.cookies = ResponseCookiesDsl().apply(cookies).get()
     }
-
+	/**
+	 * Body of the HTTP response
+	 */
     fun body(body: Map<String, Any>) {
 		response.body = Body(body.toDslProperties())
 	}
-
+	/**
+	 * Body of the HTTP response
+	 */
     fun body(vararg body: Pair<String, Any>) {
 		response.body = Body(body.toMap().toDslProperties())
 	}
-
+	/**
+	 * Body of the HTTP response
+	 */
     fun body(body: Pair<String, Any>) {
 		response.body = Body(mapOf(body).toDslProperties())
 	}
-
+	/**
+	 * Body of the HTTP response
+	 */
     fun body(body: List<Any>) {
 		response.body = Body(body.toDslProperties())
 	}
-
+	/**
+	 * Body of the HTTP response
+	 */
     fun body(body: Any) {
 		response.body = Body(body)
 	}
@@ -119,7 +128,10 @@ class ResponseDsl {
 	val r = regex
 
 
-	class ResponseValueSpec : ValueSpec<ServerDslProperty>(Response())
+	class ResponseValueSpec : ValueSpec<ServerDslProperty>(Response()) {
+		fun fromRequest() = FromRequestDsl()
+	}
+
 	/**
 	 * Constants and functions to describe values
 	 */
@@ -129,21 +141,16 @@ class ResponseDsl {
 	 */
 	val v = value
 
-    fun fromRequest() = FromRequestDsl()
-
     internal fun get(): Response = response
 
-    private class ResponseHeadersDsl : HeadersDsl() {
-
-        private val common = Common()
+    private inner class ResponseHeadersDsl : HeadersDsl() {
 
         override fun matching(value: Any?): Any? {
             return value?.also {
                 return when (value) {
-                    is String -> return this.common.value(
-                            this.common.c(value),
-                            this.common.p(NotToEscapePattern(Pattern.compile(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*")))
-                    )
+                    is String -> v
+							.consumer(value)
+							.producer(NotToEscapePattern(Pattern.compile(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*")))
                     else -> value
                 }
             }
@@ -151,17 +158,14 @@ class ResponseDsl {
 
     }
 
-    private class ResponseCookiesDsl : CookiesDsl() {
-
-        private val common = Common()
+    private inner class ResponseCookiesDsl : CookiesDsl() {
 
         override fun matching(value: Any?): Any? {
             return value?.also {
                 return when (value) {
-                    is String -> return this.common.value(
-                            this.common.c(value),
-                            this.common.p(this.common.regex(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*"))
-                    )
+                    is String -> v
+							.consumer(value)
+							.producer(regex(RegexpUtils.escapeSpecialRegexWithSingleEscape(value) + ".*"))
                     else -> value
                 }
             }

@@ -718,9 +718,9 @@ then:
 			}
 			response {
 				status(OK)
-				body("value is ${fromRequest().body("$.value")}")
+				body("value is ${v.fromRequest().body("$.value")}")
 				headers {
-					contentType = fromRequest().header(ACCEPT)
+					contentType = value.fromRequest().header(ACCEPT)
 				}
 			}
 		}

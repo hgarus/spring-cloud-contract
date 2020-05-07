@@ -139,23 +139,22 @@ class RequestDsl  {
 	/**
 	 * Constants and functions to describe values using regular expressions
 	 */
-	val r = RegexSpec()
+	val regex = RegexSpec()
 	/**
 	 * Constants and functions to describe values using regular expressions
 	 */
-	val regex = RegexSpec()
+	val r = regex
 
 	class RequestValueSpec : ValueSpec<ClientDslProperty>(Request())
 	/**
 	 * Constants and functions to describe values
 	 */
-	val v
-		get() = RequestValueSpec()
+	val value = RequestValueSpec()
 	/**
 	 * Constants and functions to describe values
 	 */
-	val value
-		get() = RequestValueSpec()
+	val v = value
+
 
     internal fun get() = request
 
