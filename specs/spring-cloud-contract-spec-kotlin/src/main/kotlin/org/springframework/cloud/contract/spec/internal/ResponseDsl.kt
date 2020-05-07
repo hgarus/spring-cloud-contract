@@ -61,50 +61,52 @@ class ResponseDsl : CommonDsl() {
 	}
 
     /**
-     * The HTTP response headers.
-     */
-    private var headers: Headers? = null
-
-    /**
-     * The HTTP response cookies.
-     */
-    private var cookies: Cookies? = null
-
-    /**
-     * The HTTP response body.
-     */
-    private var body: Body? = null
-
-    /**
      * Indicates asynchronous communication.
      */
-    var async: Boolean = false
+    var async: Boolean
+		get() = response.async
+		set(value) { response.async = value}
 
-    /**
-     * The HTTP response body matchers.
-     */
-    var bodyMatchers: ResponseBodyMatchers? = null
 
+	/**
+	 * HTTP headers sent with the response.
+	 */
     fun headers(headers: HeadersDsl.() -> Unit) {
-        this.headers = ResponseHeadersDsl().apply(headers).get()
+        response.headers = ResponseHeadersDsl().apply(headers).get()
     }
 
+	/**
+	 * HTTP cookies sent with the response.
+	 */
     fun cookies(cookies: CookiesDsl.() -> Unit) {
-        this.cookies = ResponseCookiesDsl().apply(cookies).get()
+        response.cookies = ResponseCookiesDsl().apply(cookies).get()
     }
 
-    fun body(body: Map<String, Any>) = Body(body.toDslProperties())
+    fun body(body: Map<String, Any>) {
+		response.body = Body(body.toDslProperties())
+	}
 
-    fun body(vararg body: Pair<String, Any>) = Body(body.toMap().toDslProperties())
+    fun body(vararg body: Pair<String, Any>) {
+		response.body = Body(body.toMap().toDslProperties())
+	}
 
-    fun body(body: Pair<String, Any>) = Body(mapOf(body).toDslProperties())
+    fun body(body: Pair<String, Any>) {
+		response.body = Body(mapOf(body).toDslProperties())
+	}
 
-    fun body(body: List<Any>) = Body(body.toDslProperties())
+    fun body(body: List<Any>) {
+		response.body = Body(body.toDslProperties())
+	}
 
-    fun body(body: Any) = Body(body)
+    fun body(body: Any) {
+		response.body = Body(body)
+	}
 
+	/**
+	 * The HTTP response body matchers.
+	 */
     fun bodyMatchers(configurer: ResponseBodyMatchersDsl.() -> Unit) {
-        bodyMatchers = ResponseBodyMatchersDsl().apply(configurer).get()
+        response.bodyMatchers = ResponseBodyMatchersDsl().apply(configurer).get()
     }
 
     /* HELPER VARIABLES */
@@ -205,14 +207,7 @@ class ResponseDsl : CommonDsl() {
 
     fun anyOf(vararg values: String?) = response.anyOf(*values)
 
-    internal fun get(): Response {
-		headers?.also { response.headers = headers }
-        cookies?.also { response.cookies = cookies }
-        body?.also { response.body = body }
-        response.async = async
-        bodyMatchers?.also { response.bodyMatchers = bodyMatchers }
-        return response
-    }
+    internal fun get(): Response = response
 
     private class ResponseHeadersDsl : HeadersDsl() {
 

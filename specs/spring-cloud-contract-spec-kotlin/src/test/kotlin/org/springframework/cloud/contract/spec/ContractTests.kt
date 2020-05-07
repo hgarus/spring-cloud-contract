@@ -50,7 +50,7 @@ class ContractTests {
 				headers {
 					header("foo2", "bar")
 				}
-				body = body("foo2" to "bar")
+				body("foo2" to "bar")
 			}
 		}
 
@@ -439,7 +439,7 @@ then:
 			}
 			response {
 				status(OK)
-				body = body("id" to mapOf("value" to "132"),
+				body("id" to mapOf("value" to "132"),
 						"surname" to "Kowalsky",
 						"name" to "Jan",
 						"created" to "2014-02-02 12:23:43"
@@ -470,7 +470,7 @@ then:
 			}
 			response {
 				status(OK)
-				body = body("id" to mapOf("value" to "132"),
+				body("id" to mapOf("value" to "132"),
 						"surname" to "Kowalsky",
 						"name" to "Jan",
 						"created" to "2014-02-02 12:23:43"
@@ -546,7 +546,7 @@ then:
 			}
 			response {
 				status(OK)
-				body = body("id" to mapOf("value" to "132"),
+				body("id" to mapOf("value" to "132"),
 						"surname" to "Kowalsky",
 						"name" to "Jan",
 						"created" to "2014-02-02 12:23:43"
@@ -659,7 +659,7 @@ then:
 			}
 			response {
 				status(OK)
-				body = body(listOf("foo2", "bar2"))
+				body(listOf("foo2", "bar2"))
 			}
 		}
 
@@ -724,7 +724,7 @@ then:
 			}
 			response {
 				status(OK)
-				body = body("value is ${fromRequest().body("$.value")}")
+				body("value is ${fromRequest().body("$.value")}")
 				headers {
 					contentType = fromRequest().header(ACCEPT)
 				}
