@@ -16,7 +16,6 @@
 
 package org.springframework.cloud.contract.spec.internal
 
-import org.springframework.cloud.contract.spec.HttpMethod
 import org.springframework.cloud.contract.spec.toDslProperties
 import org.springframework.cloud.contract.spec.toDslProperty
 import org.springframework.cloud.contract.spec.util.RegexpUtils
@@ -35,9 +34,7 @@ class RequestDsl  {
 	/**
      * HTTP method of the request
      */
-    var method
-		get() = HttpMethod.fromName(request.method.clientValue.toString())
-		set(value) { request.method = value?.httpMethod?.methodName?.toDslProperty()}
+    val method = HttpMethodSpec()
 
 	/**
 	 * URL where the request will be sent.
@@ -156,7 +153,27 @@ class RequestDsl  {
 	val v = value
 
 
-    internal fun get() = request
+	internal fun get() = request
+
+	inner class HttpMethodSpec {
+		private fun method(httpMethod: HttpMethods.HttpMethod) {
+			request.method = httpMethod.methodName.toDslProperty()
+		}
+		val GET
+			get() = method(HttpMethods.HttpMethod.GET)
+		val POST
+			get() = method(HttpMethods.HttpMethod.POST)
+		val PUT
+			get() = method(HttpMethods.HttpMethod.PUT)
+		val PATCH
+			get() = method(HttpMethods.HttpMethod.PATCH)
+		val DELETE
+			get() = method(HttpMethods.HttpMethod.DELETE)
+		val OPTIONS
+			get() = method(HttpMethods.HttpMethod.OPTIONS)
+		val TRACE
+			get() = method(HttpMethods.HttpMethod.TRACE)
+	}
 
     private inner class RequestHeadersDsl : HeadersDsl() {
 

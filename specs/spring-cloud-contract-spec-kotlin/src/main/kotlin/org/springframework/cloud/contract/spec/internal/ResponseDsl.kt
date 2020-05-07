@@ -16,7 +16,6 @@
 
 package org.springframework.cloud.contract.spec.internal
 
-import org.springframework.cloud.contract.spec.HttpStatus
 import org.springframework.cloud.contract.spec.toDslProperties
 import org.springframework.cloud.contract.spec.toDslProperty
 import org.springframework.cloud.contract.spec.util.RegexpUtils
@@ -37,16 +36,7 @@ class ResponseDsl {
     /**
      * HTTP response status.
      */
-	fun status(status: Int) {
-		response.status = status.toDslProperty()
-	}
-
-	/**
-	 * HTTP response status.
-	 */
-	fun status(status: HttpStatus) {
-		status(status.code)
-	}
+	val status = StatusSpec(response)
 
     /**
      * HTTP response delay

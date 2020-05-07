@@ -17,12 +17,10 @@
 package contracts
 
 import org.springframework.cloud.contract.spec.ContractDsl.Companion.contract
-import org.springframework.cloud.contract.spec.HttpMethod.POST
-import org.springframework.cloud.contract.spec.HttpStatus.OK
 
 contract {
     request {
-        method = POST
+        method.POST
         url("/tests")
         multipart {
             field("file1", named(
@@ -41,7 +39,7 @@ contract {
         }
     }
     response {
-        status(OK)
+        status.OK
         headers {
             contentType = "application/json"
         }
