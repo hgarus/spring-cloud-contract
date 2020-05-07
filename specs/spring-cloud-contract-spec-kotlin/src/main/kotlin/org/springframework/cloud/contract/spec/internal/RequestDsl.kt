@@ -18,6 +18,7 @@ package org.springframework.cloud.contract.spec.internal
 
 import org.springframework.cloud.contract.spec.HttpMethod
 import org.springframework.cloud.contract.spec.toDslProperties
+import org.springframework.cloud.contract.spec.toDslProperty
 import org.springframework.cloud.contract.spec.util.RegexpUtils
 
 /**
@@ -34,7 +35,9 @@ class RequestDsl  {
 	/**
      * HTTP method of the request
      */
-    var method: HttpMethod? = null
+    var method
+		get() = HttpMethod.fromName(request.method.clientValue.toString())
+		set(value) { request.method = value?.httpMethod?.methodName?.toDslProperty()}
 
 	/**
 	 * URL where the request will be sent.
