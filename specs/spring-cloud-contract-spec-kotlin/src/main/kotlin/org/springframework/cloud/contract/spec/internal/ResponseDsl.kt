@@ -20,6 +20,7 @@ import org.springframework.cloud.contract.spec.HttpStatus
 import org.springframework.cloud.contract.spec.toDslProperties
 import org.springframework.cloud.contract.spec.toDslProperty
 import org.springframework.cloud.contract.spec.util.RegexpUtils
+import java.time.Duration
 import java.util.regex.Pattern
 
 /**
@@ -48,9 +49,16 @@ class ResponseDsl : CommonDsl() {
 	}
 
     /**
-     * The HTTP response delay in milliseconds.
+     * HTTP response delay
      */
-    var delay: DslProperty<Any>? = null
+	val delay
+		get() = DelaySpec()
+
+	inner class DelaySpec {
+		fun fixed(duration: Duration) {
+			response.delay = duration.toMillis().toDslProperty()
+		}
+	}
 
     /**
      * The HTTP response headers.
@@ -76,8 +84,6 @@ class ResponseDsl : CommonDsl() {
      * The HTTP response body matchers.
      */
     var bodyMatchers: ResponseBodyMatchers? = null
-
-    fun fixedMilliseconds(delay: Long): DslProperty<Any> = delay.toDslProperty()
 
     fun headers(headers: HeadersDsl.() -> Unit) {
         this.headers = ResponseHeadersDsl().apply(headers).get()
@@ -200,7 +206,6 @@ class ResponseDsl : CommonDsl() {
     fun anyOf(vararg values: String?) = response.anyOf(*values)
 
     internal fun get(): Response {
-		delay?.also { response.delay = delay }
 		headers?.also { response.headers = headers }
         cookies?.also { response.cookies = cookies }
         body?.also { response.body = body }
